@@ -53,21 +53,21 @@
 
   <div id="operationsContainer">
     <div class="container px-3 pb-3">
-      <h1 class="text-center mb-2">Recover shared secret</h1>
-      <div class="text-center mb-4">Recover shared secret using <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm.</div>
+      <h1 class=" mb-2">Recover shared secret</h1>
+      <div class=" mb-4">Recover shared secret using <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm.</div>
 
       <div class="row align-items-center">
-        <h3 class="text-center mb-4">Shares</h3>
+        <h3 class=" mb-4">Shares</h3>
         <div class="col-12 mb-3">
           <textarea type="text" id="shares" class="form-control" rows="5" placeholder="Please provide the shares, each share in a separate line"></textarea>
         </div>
         <div class="mb-3">
-          <button class="btn btn-primary" onclick="combine()">Retrieve secret</button>
+          <button class="btn btn-primary" onclick="combine()">Recover secret</button>
         </div>
       </div>
 
       <div class="row align-items-center">
-        <h3 class="text-center mb-4">Secret</h3>
+        <h3 class=" mb-4">Secret</h3>
         <div class="col-12 mb-3">
           <textarea type="text" id="secret" class="form-control" rows="5" placeholder="" readonly></textarea>
         </div>

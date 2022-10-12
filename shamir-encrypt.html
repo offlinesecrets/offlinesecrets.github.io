@@ -53,15 +53,15 @@
 
   <div id="operationsContainer">
     <div class="container px-3 pb-3">
-      <h1 class="text-center mb-2">Encrypt secret with split password</h1>
-      <div class="text-center mb-4">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms to encrypt & split secret into shares. The secret can be recovered using the quorum of the generated shares.</div>
+      <h1 class=" mb-2">Encrypt secret with split password</h1>
+      <div class=" mb-4">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms to encrypt & split secret into shares. The secret can be recovered using the quorum of the generated shares.</div>
 
       <div id="secretContainer" class="row align-items-center">
         <div class="col-2 mb-3" style="text-align: right">
           <label for="secret" class="sr-only">Provide secret</label>
         </div>
         <div class="col-10 mb-3">
-          <textarea type="text" id="secret" class="form-control" placeholder="Please provide the secret" maxlength="110" onchange="validateSecret()" rows="5"></textarea>
+          <textarea type="text" id="secret" class="form-control" placeholder="Please provide the secret" maxlength="110" onchange="validateSecret();split();" rows="5"></textarea>
         </div>
       </div>
 
@@ -102,21 +102,33 @@
       </div>
 
       <div class="row align-items-center">
+        <div class="col-2 mb-3" style="text-align: right">
+          <label for="secret" class="sr-only">Additional description</label>
+        </div>
+        <div class="col-10 mb-3">
+          <input id="comment" type="text" class="form-control" placeholder="Please provide your comment here" onchange="split()">
+        </div>
+      </div>
+
+      <div class="row align-items-center">
         <div class="mb-3">
           <button class="btn btn-primary" onclick="split()">Generate QR codes and password shares</button>
         </div>
-        <h3 class="text-center mb-4">Password divided into shares</h3>
+        <h3 class=" mb-4">Password divided into shares</h3>
         <div class="col-12 mb-3">
           <textarea type="text" id="shares" class="form-control" rows="5" readonly></textarea>
         </div>
-        <h3 class="text-center mb-4">Secret</h3>
+        <h3 class=" mb-4">Secret</h3>
         <div class="col-12 mb-3">
           <textarea type="text" id="secretEncrypted" class="form-control" rows="7" readonly></textarea>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-center mb-4">Printable content</h3>
+      <div class="row align-items-center">
+        <h3 class=" mb-4">Printable content</h3>
+        <div class="mt-4">
+          <div id="qrGenerated"></div>
+        </div>
         <div class="mb-3">
           <button id="printButton" class="btn btn-primary" onclick="window.print()" disabled>Print</button>
         </div>
@@ -162,12 +174,13 @@
     document.getElementById('secretEncrypted').value = secretEncrypted;
 
     shares.forEach((share, index) => {
-      generatePrintPages(secretEncrypted, password, share, index);
+      generatePrintPage(secretEncrypted, password, share, index);
     });
     document.getElementById('printButton').disabled = false;
   }
 
-  function generatePrintPages(secretEncrypted, password, share, shareIndex) {
+  function generatePrintPage(secretEncrypted, password, share, shareIndex) {
+    const comment = document.getElementById('comment').value;
     const createQr = document.getElementById('createQr').checked;
     const textareaRows = (createQr) ? 3 : 7;
 
@@ -175,6 +188,7 @@
     printPageDiv.classList.add('print-page');
     printPageDiv.innerHTML = '' +
       '<div class="row align-items-center">' +
+      `<div class="col-12 mt-1">${comment}</div>` +
       `<div class="col-12 mt-1">1. Password share: <input id="share_${shareIndex}" class="form-control artifact"/></div>` +
       '</div>' +
       '<div class="row align-items-center">' +
