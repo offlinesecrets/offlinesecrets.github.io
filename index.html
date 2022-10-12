@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Decrypt QR Secret</title>
+  <title>Encrypt with AES and Shamir</title>
+  <link rel="icon" type="image/x-icon" href="icon.svg">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <link rel="stylesheet" href="main.css"/>
 </head>
-<body>
+<body class="bg-light">
 
 <div class="container px-0 bg-light-subtle">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3 py-1 px-3">
@@ -52,87 +53,83 @@
 
   <div id="operationsContainer">
     <div class="container px-3 pb-3">
-      <h1 class="text-center mb-2">Store secrets offline</h1>
+      <h1 class=" mb-2">Store secrets offline</h1>
 
       <div class="row mt-4 mb-4">
-        <span class="text-center mb-2">Encryption tools based on <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms that split secrets into multiple parts. This allows to securely store those secrets offline (i.e. in a pgysical form in the real world) by placing the parts in different locations.</span>
-        <span class="text-center">Use one of the following options.</span>
+        <span class=" mb-2">Encryption tools based on <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms that split secrets into multiple parts. This allows to securely store those secrets offline (i.e. in the real world) by placing the parts in different locations. You can use one of the following options.</span>
       </div>
 
       <div class="row mb-3">
-        <h3 class="text-center"><a href="simple-encrypt.html">1. Simple encryption</a></h3>
-        <div class="text-center mb-4">
-          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> algorithm to encrypt secret and generate QR code.</span>
+        <h3 class=""><a href="simple-encrypt.html">1. Simple encryption</a></h3>
+        <div class=" mb-4">
+          <span class="">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> algorithm to encrypt secret and generate QR code.</span>
           <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseSimple" aria-expanded="false" aria-controls="collapseExample">More info</a>
         </div>
         <div class="collapse" id="collapseSimple">
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <img src="docs/encryption.png" width="50%" />
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <span><strong>Provide:</strong> your secret and password &nbsp;|&nbsp; <strong>Store:</strong> QR code with the encrypted secret and the password &nbsp;|&nbsp; <strong>Recover:</strong> use password and QR code</span>
           </div>
-          <h4 class="text-center">Offline storage</h4>
-          <div class="text-center">
+          <h4 class="">Offline storage</h4>
+          <div class="">
             <span>You can store the secret securely offline by placing the password and the QR code in two different locations.</span>
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <img src="docs/encryption-store-offline.png" width="50%" />
           </div>
         </div>
       </div>
 
       <div class="row mb-3">
-        <h3 class="text-center"><a href="shamir-encrypt.html">2. Split secret into multiple shares</a> </h3>
-        <div class="text-center mb-4">
-          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm to split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
+        <h3 class=""><a href="shamir-encrypt.html">2. Split secret into multiple shares</a> </h3>
+        <div class=" mb-4">
+          <span class="">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm to split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
           <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseShamir" aria-expanded="false" aria-controls="collapseExample">More info</a>
         </div>
         <div class="collapse" id="collapseShamir">
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <img src="docs/shamir.png" width="50%" />
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <span><strong>Provide:</strong> your secret &nbsp;|&nbsp; <strong>Store:</strong> secret divided into multiple shares &nbsp;|&nbsp; <strong>Recover:</strong> use subset of shares</span>
           </div>
-          <h4 class="text-center">Offline storage</h4>
-          <div class="text-center">
+          <h4 class="">Offline storage</h4>
+          <div class="">
             <span>You can store the secret securely offline by placing the shares in multiple different locations.</span>
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <img src="docs/shamir-store-offline.png" width="50%" />
           </div>
         </div>
     </div>
 
       <div class="row mb-3">
-        <h3 class="text-center"><a href="shamir-encrypt.html">3. Encrypt secret with password split into multiple shares</a> </h3>
-        <div class="text-center mb-4">
-          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms to encrypt & split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
+        <h3 class=""><a href="shamir-encrypt.html">3. Encrypt secret with password split into multiple shares</a> </h3>
+        <div class=" mb-4">
+          <span class="">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms to encrypt & split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
           <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseShamirEncrypted" aria-expanded="false" aria-controls="collapseExample">More info</a>
         </div>
         <div class="collapse" id="collapseShamirEncrypted">
-          <div class="text-center">
+          <div class="">
             <img src="docs/shamir-encryption.png" width="50%" />
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <span><strong>Provide:</strong> your secret &nbsp;|&nbsp; <strong>Store:</strong> QR code with the encrypted secret and the password split into multiple shares &nbsp;|&nbsp; <strong>Recover:</strong> use the subset of shares and the QR code</span>
           </div>
-          <h4 class="text-center">Offline storage</h4>
-          <div class="text-center mb-4">
+          <h4 class="">Offline storage</h4>
+          <div class=" mb-4">
             <span>You can store the secret securely offline by placing the shares in multiple different locations and with the QR code placed only in some of the locations.</span>
           </div>
-          <div class="text-center mb-4">
+          <div class=" mb-4">
             <img src="docs/shamir-encryption-store-offline.png" width="50%" />
           </div>
         </div>
     </div>
 
-      <div class="row mb-3">
-        <h3 class="text-center">More info</h3>
-        <div class="text-center">
-          <span>How to use</span>
-      </div>
+    <div class="row mb-3">
+      <h5 class=""><a href="about.html">More information</a> </h5>
     </div>
 
   </div>

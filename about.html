@@ -1,1 +1,72 @@
-TODO
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decrypt QR Secret</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body class="bg-light">
+
+<div class="container px-0 bg-light-subtle">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3 py-1 px-3">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">
+      <img src="icon.svg" width="40" height="40" style="filter: invert()"/>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Secret sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-split.html">Split secret</a></li>
+            <li><a class="dropdown-item" href="shamir-recover.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Encryption with password sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-encrypt.html">Encrypt & split secret</a></li>
+            <li><a class="dropdown-item" href="shamir-decrypt.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="about.html">About this page</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container px-3 pb-3">
+    <div class="row mb-4">
+      <h3 class="">More information</h3>
+      <span>This service has been created for educational purposes. Please do not enter your real-world secrets in this or any other service unless you have verified it.</span>
+    </div>
+    <div class="row mb-3">
+      <h5 class="">How to make sure my secrets are not sent to someone's server?</h5>
+      <span>Download the page using <strong>File > Save Page As...</strong>, disconnect the Internet and then open the page from the local file.</span>
+    </div>
+    <div class="row mb-3">
+      <h5 class="">Why use QR codes to store encrypted data?</h5>
+      <span>It is easier to scan a QR code than to type the long text manually.</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
