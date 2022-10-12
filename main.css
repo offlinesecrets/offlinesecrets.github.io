@@ -1,0 +1,46 @@
+.hidden {
+  display: none;
+}
+
+textarea:read-only {
+  background-color: #f5f5f5;
+}
+
+a {
+  color: black;
+}
+
+.btn-light {
+  background-color: #ebebeb;
+}
+
+.more-info {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+@media print {
+  body {
+    visibility: hidden;
+  }
+  .printable {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  textarea:read-only {
+    background-color: white;
+  }
+}
+
+.success input, .success textarea {
+  border: 2px solid forestgreen;
+  background-color: lightgreen;
+}
+
+.artifact {
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  word-wrap: break-word;
+}

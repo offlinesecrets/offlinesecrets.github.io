@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encrypt QR Secret</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="shamir.js"></script>
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+<div class="container px-0 bg-light-subtle">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3 py-1 px-3">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">
+      <img src="icon.svg" width="40" height="40" style="filter: invert()"/>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Secret sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-split.html">Split secret</a></li>
+            <li><a class="dropdown-item active" href="shamir-recover.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Encryption with password sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-encrypt.html">Encrypt & split secret</a></li>
+            <li><a class="dropdown-item" href="shamir-decrypt.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About this page</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="operationsContainer">
+    <div class="container px-3 pb-3">
+      <h1 class="text-center mb-2">Recover shared secret</h1>
+      <div class="text-center mb-4">Recover shared secret using <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm.</div>
+
+      <div class="row align-items-center">
+        <h3 class="text-center mb-4">Shares</h3>
+        <div class="col-12 mb-3">
+          <textarea type="text" id="shares" class="form-control" rows="5" placeholder="Please provide the shares, each share in a separate line"></textarea>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary" onclick="combine()">Retrieve secret</button>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <h3 class="text-center mb-4">Secret</h3>
+        <div class="col-12 mb-3">
+          <textarea type="text" id="secret" class="form-control" rows="5" placeholder="" readonly></textarea>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+
+  const prime = BigInt('746697854386008132815920241340609174164265132104079677270038385566920684555356536979089970240644018410661432131806504962783023996509487242300565704299422902231694630531578864233122908956803846340593686397637240814918393327192995290171983811952312931629067306802403155598405758431608729890495776482322026757557470643042050105856287301927838162776555550063807889900532712828270059017066249501667141260799248277616455781034085159849034736850289210732280150653746797732776419176899687873397488541366988074589909307207269368369336030653884243808095724198730452895363633875216915993913863073740087317124882135637890917110233078483988806196121982309450139128371233247663897089627944687275666291046219662268804411182233491225239524802073102010975713834355322656674424077944963843139442130652541958334150784658168892298388776582947163119901929289455619975176496337460199476805700569058958563098868528719526683687568991273117655645044110459598150439783983358126897158927053845672510816385251089140030607454639241508963809650329210500103191698673487493393944975132563842330237994017814498328711096580790555143796621798193338101279135623663959713009523489002934518128577698190436601633778276319814923074315862616621540853690113317426907106169753') ;
+
+  function combine() {
+    try {
+      const shares = document.getElementById('shares').value;
+      const shamir = new Shamir(prime, 50);
+      const secret = shamir.combine(shares.split('\n').filter(row => row.length > 0));
+      document.getElementById('secret').value = secret;
+    } catch (e) {
+      document.getElementById('secret').value = 'Unable to retrieve secret from given shares'
+    }
+
+  }
+</script>
+
+</body>
+</html>

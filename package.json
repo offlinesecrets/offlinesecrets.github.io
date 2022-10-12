@@ -1,0 +1,16 @@
+{
+  "name": "qr-secret",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "rafalry",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^5.1.0"
+  }
+}

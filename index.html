@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decrypt QR Secret</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+<div class="container px-0 bg-light-subtle">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3 py-1 px-3">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">
+      <img src="icon.svg" width="40" height="40" style="filter: invert()"/>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Secret sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-split.html">Split secret</a></li>
+            <li><a class="dropdown-item" href="shamir-recover.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Encryption with password sharing</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="shamir-encrypt.html">Encrypt & split secret</a></li>
+            <li><a class="dropdown-item" href="shamir-decrypt.html">Recover secret</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About this page</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="operationsContainer">
+    <div class="container px-3 pb-3">
+      <h1 class="text-center mb-2">Store secrets offline</h1>
+
+      <div class="row mt-4 mb-4">
+        <span class="text-center mb-2">Encryption tools based on <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms that split secrets into multiple parts. This allows to securely store those secrets offline (i.e. in a pgysical form in the real world) by placing the parts in different locations.</span>
+        <span class="text-center">Use one of the following options.</span>
+      </div>
+
+      <div class="row mb-3">
+        <h3 class="text-center"><a href="simple-encrypt.html">1. Simple encryption</a></h3>
+        <div class="text-center mb-4">
+          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> algorithm to encrypt secret and generate QR code.</span>
+          <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseSimple" aria-expanded="false" aria-controls="collapseExample">More info</a>
+        </div>
+        <div class="collapse" id="collapseSimple">
+          <div class="text-center mb-4">
+            <img src="docs/encryption.png" width="50%" />
+          </div>
+          <div class="text-center mb-4">
+            <span><strong>Provide:</strong> your secret and password &nbsp;|&nbsp; <strong>Store:</strong> QR code with the encrypted secret and the password &nbsp;|&nbsp; <strong>Recover:</strong> use password and QR code</span>
+          </div>
+          <h4 class="text-center">Offline storage</h4>
+          <div class="text-center">
+            <span>You can store the secret securely offline by placing the password and the QR code in two different locations.</span>
+          </div>
+          <div class="text-center mb-4">
+            <img src="docs/encryption-store-offline.png" width="50%" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <h3 class="text-center"><a href="shamir-encrypt.html">2. Split secret into multiple shares</a> </h3>
+        <div class="text-center mb-4">
+          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithm to split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
+          <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseShamir" aria-expanded="false" aria-controls="collapseExample">More info</a>
+        </div>
+        <div class="collapse" id="collapseShamir">
+          <div class="text-center mb-4">
+            <img src="docs/shamir.png" width="50%" />
+          </div>
+          <div class="text-center mb-4">
+            <span><strong>Provide:</strong> your secret &nbsp;|&nbsp; <strong>Store:</strong> secret divided into multiple shares &nbsp;|&nbsp; <strong>Recover:</strong> use subset of shares</span>
+          </div>
+          <h4 class="text-center">Offline storage</h4>
+          <div class="text-center">
+            <span>You can store the secret securely offline by placing the shares in multiple different locations.</span>
+          </div>
+          <div class="text-center mb-4">
+            <img src="docs/shamir-store-offline.png" width="50%" />
+          </div>
+        </div>
+    </div>
+
+      <div class="row mb-3">
+        <h3 class="text-center"><a href="shamir-encrypt.html">3. Encrypt secret with password split into multiple shares</a> </h3>
+        <div class="text-center mb-4">
+          <span class="text-center">Use <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> and <a target="_blank" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir</a> algorithms to encrypt & split secret into shares. The secret can be recovered using the subset of the generated shares.</span>
+          <a class="btn btn-light more-info" data-bs-toggle="collapse" data-bs-target="#collapseShamirEncrypted" aria-expanded="false" aria-controls="collapseExample">More info</a>
+        </div>
+        <div class="collapse" id="collapseShamirEncrypted">
+          <div class="text-center">
+            <img src="docs/shamir-encryption.png" width="50%" />
+          </div>
+          <div class="text-center mb-4">
+            <span><strong>Provide:</strong> your secret &nbsp;|&nbsp; <strong>Store:</strong> QR code with the encrypted secret and the password split into multiple shares &nbsp;|&nbsp; <strong>Recover:</strong> use the subset of shares and the QR code</span>
+          </div>
+          <h4 class="text-center">Offline storage</h4>
+          <div class="text-center mb-4">
+            <span>You can store the secret securely offline by placing the shares in multiple different locations and with the QR code placed only in some of the locations.</span>
+          </div>
+          <div class="text-center mb-4">
+            <img src="docs/shamir-encryption-store-offline.png" width="50%" />
+          </div>
+        </div>
+    </div>
+
+      <div class="row mb-3">
+        <h3 class="text-center">More info</h3>
+        <div class="text-center">
+          <span>How to use</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+
+  let html5QrcodeScanner;
+  function scanQRCode() {
+    document.getElementById('ciphertext').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('plaintext').value = '';
+    document.getElementById('operationsContainer').classList.remove('success');
+    document.getElementById('operationsContainer').classList.remove('failure');
+    html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader",
+      { fps: 10, qrbox: {width: 280, height: 200} }, false);
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+  }
+
+  function onScanSuccess(decodedText, decodedResult) {
+    html5QrcodeScanner.clear();
+    document.getElementById('ciphertext').value = decodedText;
+    document.getElementById('reader').innerHTML = '';
+  }
+
+  function onScanFailure(error) {
+  }
+  function decryptQRCode() {
+    const ciphertext = document.getElementById('ciphertext').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const decryptedText = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+
+      if (decryptedText) {
+        document.getElementById('plaintext').value = decryptedText;
+        document.getElementById('operationsContainer').classList.add('success');
+        document.getElementById('operationsContainer').classList.remove('failure');
+      } else {
+        document.getElementById('plaintext').value = 'Decryption error. Please check if the password is valid.';
+        document.getElementById('operationsContainer').classList.remove('success');
+        document.getElementById('operationsContainer').classList.add('failure');
+      }
+    } catch (error) {
+      console.error(error);
+      document.getElementById('plaintext').value = 'Error during decryption';
+    }
+  }
+</script>
+
+</body>
+</html>
