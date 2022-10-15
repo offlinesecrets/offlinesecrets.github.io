@@ -68,28 +68,37 @@
 
       <div class="row align-items-center">
         <div class="col-2 mb-3" style="text-align: right">
-          <label for="secret" class="sr-only">All shares</label>
+          <label for="sharesCount" class="sr-only">All shares</label>
         </div>
         <div class="col-lg-1 col-md-2 mb-3">
           <input id="sharesCount" type="number" class="form-control" value="5" min="2" max="10" maxlength="2" onchange="updateQuorum();split();"/>
         </div>
+        <div class="col mb-3" style="text-align: left">
+          <label for="sharesCount" class="sr-only field-description"><small>Total number of shares that will be generated</small></label>
+        </div>
       </div>
 
       <div class="row align-items-center">
         <div class="col-2 mb-3" style="text-align: right">
-          <label for="secret" class="sr-only">Quorum shares</label>
+          <label for="quorumCount" class="sr-only">Quorum shares</label>
         </div>
         <div class="col-lg-1 col-md-2 mb-3">
           <input id="quorumCount" type="number" class="form-control" value="3" min="2" max="5" maxlength="2" onchange="split();"/>
         </div>
+        <div class="col mb-3" style="text-align: left">
+          <label for="quorumCount" class="sr-only field-description"><small>Number of shares that is required to recover secret</small></label>
+        </div>
       </div>
 
       <div class="row align-items-center">
         <div class="col-2 mb-3" style="text-align: right">
-          <label for="secret" class="sr-only">Minimum share length</label>
+          <label for="minSecretLength" class="sr-only">Minimum secret length</label>
         </div>
         <div class="col-lg-1 col-md-2 mb-3">
           <input id="minSecretLength" type="number" class="form-control" value="20" min="8" max="100" maxlength="2" onchange="split();"/>
+        </div>
+        <div class="col mb-3" style="text-align: left">
+          <label for="minSecretLength" class="sr-only field-description"><small>Shorter secrets will be extended to this size in order to prevent brute-force attacks</small></label>
         </div>
       </div>
 

@@ -48,3 +48,7 @@ a {
   font-weight: bold;
   word-wrap: break-word;
 }
+
+.field-description {
+  font-style: italic;
+}
