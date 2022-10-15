@@ -33,6 +33,9 @@ a {
   textarea:read-only {
     background-color: white;
   }
+  .print-page {
+    page-break-after: always;
+  }
 }
 
 .success input, .success textarea {
