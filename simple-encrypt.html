@@ -27,6 +27,7 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item active" href="simple-encrypt.html">Encrypt</a></li>
             <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -83,18 +84,44 @@
         </div>
       </div>
 
+      <div class="row align-items-center">
+        <div class="col-2 mb-3" style="text-align: right">
+          <label for="comment" class="sr-only">Additional description</label>
+        </div>
+        <div class="col-10 mb-3">
+          <input id="comment" type="text" class="form-control" placeholder="Please provide your comment here" onchange="encrypt()">
+        </div>
+      </div>
+
       <div>
         <h3 class=" mb-4">Encrypted content</h3>
         <div class="mb-3">
           <button id="printButton" class="btn btn-primary" onclick="window.print()" disabled>Print</button>
         </div>
         <div class="printable">
-          <input type="text" class="form-control" placeholder="Please provide your comment here">
-          <div class="mt-4">
-            <div id="qrGenerated"></div>
+          <div class="print-page">
+            <div id="printCommentPage1" class="col-12 mt-1"></div>
+            <div class="mt-4">
+              <div id="qrGenerated"></div>
+            </div>
+            <div class="mt-4">
+              <textarea id="secretEncrypted" class="form-control" rows="4" readonly></textarea>
+            </div>
           </div>
-          <div class="mt-4">
-            <textarea id="secretEncrypted" class="form-control" rows="4" readonly></textarea>
+          <div class="print-page">
+            <div id="printCommentPage2" class="col-12 mt-1 mb-4"></div>
+            <div class="mb-4">
+              <span>Password</span>
+              <input id="printPassphrase" class="form-control" />
+            </div>
+            <div class="mb-4">
+              <span>Key</span>
+              <input id="printKey" class="form-control" />
+            </div>
+            <div class="mb-4">
+              <span>Initialisation Vector</span>
+              <input id="printIV" class="form-control" />
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +135,9 @@
 <script>
 
   function encrypt() {
+    const comment = document.getElementById('comment').value;
+    document.getElementById('printCommentPage1').innerText = comment;
+    document.getElementById('printCommentPage2').innerText = comment;
     const secret = document.getElementById('secret').value;
     const password = document.getElementById('password').value;
     document.getElementById('qrGenerated').innerHTML = '';
@@ -115,7 +145,11 @@
     if (!secret || !password) {
       return;
     }
-    const secretEncrypted = CryptoJS.AES.encrypt(secret, password).toString();
+    const encrypted = CryptoJS.AES.encrypt(secret, password);
+    document.getElementById('printPassphrase').value = password;
+    document.getElementById('printKey').value = encrypted.key;
+    document.getElementById('printIV').value = encrypted.iv;
+    const secretEncrypted = encrypted.toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
 
     if (document.getElementById('createQr').checked) {

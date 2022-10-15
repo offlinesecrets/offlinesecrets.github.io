@@ -27,8 +27,8 @@
           <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
-            <li><a class="dropdown-item active" href="simple-decrypt.html">Decrypt</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt using password</a></li>
+            <li><a class="dropdown-item active" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -54,7 +54,7 @@
 
   <div id="operationsContainer">
     <div class="container px-3 pb-3">
-      <h1 class=" mb-2">Simple secret decryption</h1>
+      <h1 class=" mb-2">Decrypt secret using key & initialisation vector</h1>
       <div class=" mb-4">Decrypt secret using <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> algorithm.</div>
 
       <div id="scanQRContainer" class="row mb-4">
@@ -74,8 +74,23 @@
 
       <div id="passwordContainer" class="row mb-4">
         <h3 class="">Provide password</h3>
-        <div class="col">
-          <input type="text" id="password" class="form-control" placeholder="Please provide the password" onkeyup="decryptQRCode()">
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-2 mb-3" style="text-align: right">
+          <label for="key" class="sr-only">Key</label>
+        </div>
+        <div class="col-10 mb-3">
+          <input type="text" id="key" class="form-control" placeholder="Please provide the key" onkeyup="decryptQRCode()">
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-2 mb-3" style="text-align: right">
+          <label for="iv" class="sr-only">Initialisation vector</label>
+        </div>
+        <div class="col-10 mb-3">
+          <input type="text" id="iv" class="form-control" placeholder="Please provide the initialisation vector" onkeyup="decryptQRCode()">
         </div>
       </div>
 
@@ -119,23 +134,24 @@
   }
   function decryptQRCode() {
     const ciphertext = document.getElementById('ciphertext').value;
-    const password = document.getElementById('password').value;
+    var key = CryptoJS.enc.Hex.parse(document.getElementById('key').value);
+    var iv = CryptoJS.enc.Hex.parse(document.getElementById('iv').value);
 
-    let decryptedText;
     try {
-      decryptedText = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+      const decryptedText = CryptoJS.AES.decrypt(ciphertext, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
+
+      if (decryptedText) {
+        document.getElementById('plaintext').value = decryptedText;
+        document.getElementById('operationsContainer').classList.add('success');
+        document.getElementById('operationsContainer').classList.remove('failure');
+      } else {
+        document.getElementById('plaintext').value = 'Decryption error. Please check if the password is valid.';
+        document.getElementById('operationsContainer').classList.remove('success');
+        document.getElementById('operationsContainer').classList.add('failure');
+      }
     } catch (error) {
       console.error(error);
       document.getElementById('plaintext').value = 'Error during decryption';
-    }
-    if (decryptedText) {
-      document.getElementById('plaintext').value = decryptedText;
-      document.getElementById('operationsContainer').classList.add('success');
-      document.getElementById('operationsContainer').classList.remove('failure');
-    } else {
-      document.getElementById('plaintext').value = 'Decryption error. Please check if the password is valid.';
-      document.getElementById('operationsContainer').classList.remove('success');
-      document.getElementById('operationsContainer').classList.add('failure');
     }
   }
 </script>
