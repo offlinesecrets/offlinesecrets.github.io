@@ -28,6 +28,7 @@ a {
     position: absolute;
     left: 0;
     top: 0;
+    width: 100%;
   }
   textarea:read-only {
     background-color: white;
