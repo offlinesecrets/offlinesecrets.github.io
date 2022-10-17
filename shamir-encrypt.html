@@ -27,8 +27,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt using password</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -92,22 +91,10 @@
 
       <div class="row align-items-center">
         <div class="col-2 mb-3" style="text-align: right">
-          <label for="minSecretLength" class="sr-only">Password length</label>
-        </div>
-        <div class="col-lg-1 col-md-2 mb-3">
-          <input id="minSecretLength" type="number" class="form-control" value="20" min="15" max="50" maxlength="2" onchange="split();"/>
-        </div>
-        <div class="col mb-3" style="text-align: left">
-          <label for="minSecretLength" class="sr-only field-description"><small>Length of the generated password</small></label>
-        </div>
-      </div>
-
-      <div class="row align-items-center">
-        <div class="col-2 mb-3" style="text-align: right">
           <label for="createQr" class="sr-only">Generate QR code</label>
         </div>
         <div class="col-lg-1 col-md-2 mb-3">
-          <input class="form-check-input" type="checkbox" value="" id="createQr" checked onchange="clean();validateSecret()">
+          <input class="form-check-input" type="checkbox" value="" id="createQr" checked onchange="clean();validateSecret();split()">
         </div>
       </div>
 
@@ -128,15 +115,15 @@
         <div class="col-12 mb-3">
           <textarea type="text" id="shares" class="form-control" rows="5" readonly></textarea>
         </div>
-        <h3 class=" mb-4">Secret</h3>
-        <div class="col-12 mb-3">
+        <h3 class="">Secret</h3>
+        <div class="col-12 mb-4">
           <textarea type="text" id="secretEncrypted" class="form-control" rows="7" readonly></textarea>
         </div>
       </div>
 
       <div class="row align-items-center">
-        <h3 class=" mb-4">Printable content</h3>
-        <div class="mt-4">
+        <h3 class="mb-4">Printable content</h3>
+        <div class="">
           <div id="qrGenerated"></div>
         </div>
         <div class="mb-3">
@@ -157,6 +144,7 @@
   const PRIME = BigInt('746697854386008132815920241340609174164265132104079677270038385566920684555356536979089970240644018410661432131806504962783023996509487242300565704299422902231694630531578864233122908956803846340593686397637240814918393327192995290171983811952312931629067306802403155598405758431608729890495776482322026757557470643042050105856287301927838162776555550063807889900532712828270059017066249501667141260799248277616455781034085159849034736850289210732280150653746797732776419176899687873397488541366988074589909307207269368369336030653884243808095724198730452895363633875216915993913863073740087317124882135637890917110233078483988806196121982309450139128371233247663897089627944687275666291046219662268804411182233491225239524802073102010975713834355322656674424077944963843139442130652541958334150784658168892298388776582947163119901929289455619975176496337460199476805700569058958563098868528719526683687568991273117655645044110459598150439783983358126897158927053845672510816385251089140030607454639241508963809650329210500103191698673487493393944975132563842330237994017814498328711096580790555143796621798193338101279135623663959713009523489002934518128577698190436601633778276319814923074315862616621540853690113317426907106169753') ;
   const QR_MAX_LENGTH = 110;
   const NO_QR_MAX_LENGTH = 512;
+  const PASSPHRASE_LENGTH = 20;
 
   function updateQuorum() {
     const sharesCount = document.getElementById('sharesCount').value;
@@ -173,14 +161,15 @@
     }
     const sharesCount = document.getElementById('sharesCount').value;
     const quorumCount = document.getElementById('quorumCount').value;
-    const minSecretLength = parseInt(document.getElementById('minSecretLength').value);
-    const shamir = new Shamir(PRIME, minSecretLength);
-    const password = Shamir.randomString(minSecretLength);
-    const shares = shamir.split(password, quorumCount, sharesCount);
+    const shamir = new Shamir(PRIME, PASSPHRASE_LENGTH);
+    const password = Shamir.randomString(PASSPHRASE_LENGTH);
+    const encrypted = CryptoJS.AES.encrypt(secret, password);
+    const secretEncrypted = encrypted.toString();
+    const qrContent = Shamir.bigInt2Base64('0x' + encrypted.key) + "." + Shamir.bigInt2Base64('0x' + encrypted.iv);
+    const shares = shamir.split(qrContent, quorumCount, sharesCount);
     document.getElementById('shares').value = shares.join('\n');
     document.getElementById('printArea').innerHTML = '';
 
-    const secretEncrypted = CryptoJS.AES.encrypt(secret, password).toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
 
     shares.forEach((share, index) => {
@@ -192,14 +181,14 @@
   function generatePrintPage(secretEncrypted, password, share, shareIndex) {
     const comment = document.getElementById('comment').value;
     const createQr = document.getElementById('createQr').checked;
-    const textareaRows = (createQr) ? 3 : 7;
+    const textareaRows = (createQr) ? 3 : 12;
 
     var printPageDiv = document.createElement('div');
     printPageDiv.classList.add('print-page');
     printPageDiv.innerHTML = '' +
       '<div class="row align-items-center">' +
       `<div class="col-12 mt-1">${comment}</div>` +
-      `<div class="col-12 mt-1">1. Password share: <input id="share_${shareIndex}" class="form-control artifact"/></div>` +
+      `<div class="col-12 mt-1">1. Password share: <textarea id="share_${shareIndex}" class="form-control artifact" rows="2"></textarea></div>` +
       '</div>' +
       '<div class="row align-items-center">' +
       '<div class="mt-1">2. Encrypted secret:</div>\n' +

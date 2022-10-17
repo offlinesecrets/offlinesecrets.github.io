@@ -27,8 +27,7 @@
           <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="simple-encrypt.html">Encrypt</a></li>
-            <li><a class="dropdown-item active" href="simple-decrypt.html">Decrypt using password</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
+            <li><a class="dropdown-item active" href="simple-decrypt.html">Decrypt</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -57,14 +56,17 @@
       <h1 class=" mb-2">Simple secret decryption</h1>
       <div class=" mb-4">Decrypt secret using <a target="_blank" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> algorithm.</div>
 
-      <div id="scanQRContainer" class="row mb-4">
-        <h3 class="">Provide encrypted secret</h3>
-        <div class="col-8">
-          <div class="mb-3">
+      <h3 class="">Provide encrypted secret</h3>
+      <div class="row mb-4">
+        <div class="col-2 mb-3" style="text-align: right">
+          <div class="mb-2">Encrypted secret</div>
+          <div class="">
             <button id="scanQRButton" class="btn btn-primary" onclick="scanQRCode()">Scan QR code</button>
           </div>
+        </div>
+        <div class="col-6">
           <div class="">
-            <textarea type="text" id="ciphertext" class="form-control" placeholder="Please provide the encrypted content via QR scan or manually here" rows="4" onkeyup="decryptQRCode()"></textarea>
+            <textarea type="text" id="ciphertext" class="form-control" placeholder="Please provide the encrypted content via QR scan or manually here" rows="8" onchange="decryptQRCode()"></textarea>
           </div>
         </div>
         <div class="col-4 mb-3" id="reader-wrapper">
@@ -72,10 +74,37 @@
         </div>
       </div>
 
-      <div id="passwordContainer" class="row mb-4">
-        <h3 class="">Provide password</h3>
-        <div class="col">
-          <input type="text" id="password" class="form-control" placeholder="Please provide the password" onkeyup="decryptQRCode()">
+      <div class="mb-4">
+        <div id="passwordContainer" class="row">
+          <h3 class="">Provide password</h3>
+        </div>
+
+        <div class="row align-items-center mb-3">
+          <div class="col-2" style="text-align: right">
+            <input class="form-check-input" type="radio" id="passwordPassphrase" name="password" checked onchange="onPasswordRadioChanged()">
+            <label class="form-check-label" for="passwordPassphrase" >Password</label>
+          </div>
+          <div class="col-lg-10 col-md-2">
+            <input type="text" id="password" class="form-control" placeholder="Please provide the password" onkeyup="decryptQRCode()">
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-1">
+          <div class="col-2" style="text-align: right">
+            <input class="form-check-input" type="radio" id="passwordKeyIv" name="password" onchange="onPasswordRadioChanged()">
+            <label class="form-check-label" for="passwordKeyIv">Key </label>
+          </div>
+          <div class="col-lg-10 col-md-2">
+            <input type="text" id="key" class="form-control" placeholder="Please provide the key in hex format" onkeyup="decryptQRCode()" disabled>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-2" style="text-align: right">
+            IV
+          </div>
+          <div class="col-lg-10 col-md-2">
+            <input type="text" id="iv" class="form-control" placeholder="Please provide the initialisation vector" onkeyup="decryptQRCode()" disabled>
+          </div>
         </div>
       </div>
 
@@ -115,15 +144,36 @@
     document.getElementById('reader').innerHTML = '';
   }
 
+  function onPasswordRadioChanged() {
+    if (document.getElementById('passwordPassphrase').checked) {
+      document.getElementById('key').setAttribute('disabled', 'true');
+      document.getElementById('iv').setAttribute('disabled', 'true');
+      document.getElementById('password').removeAttribute('disabled');
+      document.getElementById('password').value = '';
+    } else {
+      document.getElementById('key').removeAttribute('disabled');
+      document.getElementById('iv').removeAttribute('disabled');
+      document.getElementById('password').setAttribute('disabled', 'true');
+      document.getElementById('key').value = '';
+      document.getElementById('iv').value = '';
+    }
+  }
+
   function onScanFailure(error) {
   }
   function decryptQRCode() {
     const ciphertext = document.getElementById('ciphertext').value;
     const password = document.getElementById('password').value;
+    const key = CryptoJS.enc.Hex.parse(document.getElementById('key').value);
+    const iv = CryptoJS.enc.Hex.parse(document.getElementById('iv').value);
 
     let decryptedText;
     try {
-      decryptedText = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+      if (document.getElementById('passwordPassphrase').checked) {
+        decryptedText = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+      } else {
+        decryptedText = CryptoJS.AES.decrypt(ciphertext, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
+      }
     } catch (error) {
       console.error(error);
       document.getElementById('plaintext').value = 'Error during decryption';

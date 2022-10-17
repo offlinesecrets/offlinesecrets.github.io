@@ -26,8 +26,7 @@
           <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Simple encryption</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item active" href="simple-encrypt.html">Encrypt</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt using password</a></li>
-            <li><a class="dropdown-item" href="simple-decrypt-key.html">Decrypt using key and IV</a></li>
+            <li><a class="dropdown-item" href="simple-decrypt.html">Decrypt</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -62,7 +61,7 @@
           <label for="secret" class="sr-only">Secret</label>
         </div>
         <div class="col-10 mb-3">
-          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" onkeyup="encrypt()" rows="5"></textarea>
+          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" onchange="encrypt()" rows="5"></textarea>
         </div>
       </div>
 
@@ -71,7 +70,7 @@
             <label for="password" class="sr-only">Password</label>
         </div>
         <div class="col-10 mb-3">
-            <input type="text" id="password" class="form-control" placeholder="Please provide the password" size="50" onkeyup="encrypt()">
+            <input type="text" id="password" class="form-control" placeholder="Please provide the password" size="50" onchange="encrypt()">
         </div>
       </div>
 
@@ -91,6 +90,9 @@
         <div class="col-10 mb-3">
           <input id="comment" type="text" class="form-control" placeholder="Please provide your comment here" onchange="encrypt()">
         </div>
+        <div class="mb-3">
+          <button class="btn btn-primary" onclick="encrypt()">Encrypt</button>
+        </div>
       </div>
 
       <div>
@@ -100,27 +102,28 @@
         </div>
         <div class="printable">
           <div class="print-page">
+            <div id="printCommentPage2" class="col-12 mt-1 mb-4"></div>
+            <div class="mb-4">
+              <span>Password</span>
+              <input id="printPassphrase" class="form-control artifact" readonly/>
+            </div>
+            <div class="mb-4">
+              <span>Key</span>
+              <input id="printKey" class="form-control artifact" readonly/>
+            </div>
+            <div class="mb-4">
+              <span>Initialisation Vector</span>
+              <input id="printIV" class="form-control artifact" readonly/>
+            </div>
+          </div>
+          <div class="print-page">
             <div id="printCommentPage1" class="col-12 mt-1"></div>
             <div class="mt-4">
               <div id="qrGenerated"></div>
             </div>
             <div class="mt-4">
-              <textarea id="secretEncrypted" class="form-control" rows="4" readonly></textarea>
-            </div>
-          </div>
-          <div class="print-page">
-            <div id="printCommentPage2" class="col-12 mt-1 mb-4"></div>
-            <div class="mb-4">
-              <span>Password</span>
-              <input id="printPassphrase" class="form-control" />
-            </div>
-            <div class="mb-4">
-              <span>Key</span>
-              <input id="printKey" class="form-control" />
-            </div>
-            <div class="mb-4">
-              <span>Initialisation Vector</span>
-              <input id="printIV" class="form-control" />
+              <span>Encrypted secret</span>
+              <textarea id="secretEncrypted" class="form-control artifact" rows="6" readonly></textarea>
             </div>
           </div>
         </div>
