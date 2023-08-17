@@ -61,7 +61,7 @@
           <label for="secret" class="sr-only">Secret</label>
         </div>
         <div class="col-10 mb-3">
-          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" maxlength="110" onchange="validateSecret();encrypt()" rows="5"></textarea>
+          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" maxlength="512" onchange="validateSecret();encrypt()" rows="5"></textarea>
         </div>
       </div>
 
@@ -140,8 +140,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
-  const QR_MAX_LENGTH = 110;
-  const NO_QR_MAX_LENGTH = 512;
+  const QR_MAX_LENGTH = 512;
+  const NO_QR_MAX_LENGTH = 2048;
 
   function validateSecret(e) {
     const secret = document.getElementById('secret').value;
@@ -171,10 +171,10 @@
     document.getElementById('printIV').value = iv;
     const secretEncrypted = encrypted.toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
-    document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -v <iv>`;
+    document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -v <iv> -nosalt`;
 
     if (document.getElementById('createQr').checked) {
-      document.getElementById('secretEncrypted').setAttribute('rows', '3');
+      document.getElementById('secretEncrypted').setAttribute('rows', '5');
       try {
         new QRCode(document.getElementById("qrGenerated"), {
           text: secretEncrypted,
@@ -186,7 +186,7 @@
         alert('Error during encryption: text is too long');
       }
     } else {
-      document.getElementById('secretEncrypted').setAttribute('rows', '10');
+      document.getElementById('secretEncrypted').setAttribute('rows', '40');
     }
     document.getElementById('printButton').disabled = false;
   }
