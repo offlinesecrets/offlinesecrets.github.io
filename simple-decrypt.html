@@ -84,7 +84,7 @@
             <input class="form-check-input" type="radio" id="passwordPassphrase" name="password" checked onchange="onPasswordRadioChanged()">
             <label class="form-check-label" for="passwordPassphrase" >Password</label>
           </div>
-          <div class="col-lg-10 col-md-2">
+          <div class="col-10">
             <input type="text" id="password" class="form-control" placeholder="Please provide the password" onkeyup="decryptQRCode()">
           </div>
         </div>
@@ -94,7 +94,7 @@
             <input class="form-check-input" type="radio" id="passwordKeyIv" name="password" onchange="onPasswordRadioChanged()">
             <label class="form-check-label" for="passwordKeyIv">Key </label>
           </div>
-          <div class="col-lg-10 col-md-2">
+          <div class="col-10">
             <input type="text" id="key" class="form-control" placeholder="Please provide the key in hex format" onkeyup="decryptQRCode()" disabled>
           </div>
         </div>
@@ -102,7 +102,7 @@
           <div class="col-2" style="text-align: right">
             IV
           </div>
-          <div class="col-lg-10 col-md-2">
+          <div class="col-10">
             <input type="text" id="iv" class="form-control" placeholder="Please provide the initialisation vector" onkeyup="decryptQRCode()" disabled>
           </div>
         </div>
@@ -149,31 +149,34 @@
       document.getElementById('key').setAttribute('disabled', 'true');
       document.getElementById('iv').setAttribute('disabled', 'true');
       document.getElementById('password').removeAttribute('disabled');
-      document.getElementById('password').value = '';
     } else {
       document.getElementById('key').removeAttribute('disabled');
       document.getElementById('iv').removeAttribute('disabled');
       document.getElementById('password').setAttribute('disabled', 'true');
-      document.getElementById('key').value = '';
-      document.getElementById('iv').value = '';
     }
+    document.getElementById('password').value = '';
+    document.getElementById('key').value = '';
+    document.getElementById('iv').value = '';
+    document.getElementById('operationsContainer').classList.remove('success');
   }
 
   function onScanFailure(error) {
   }
   function decryptQRCode() {
     const ciphertext = document.getElementById('ciphertext').value;
-    const password = document.getElementById('password').value;
-    const key = CryptoJS.enc.Hex.parse(document.getElementById('key').value);
-    const iv = CryptoJS.enc.Hex.parse(document.getElementById('iv').value);
 
-    let decryptedText;
+    let decryptedText, key, iv;
     try {
+      const password = document.getElementById('password').value;
       if (document.getElementById('passwordPassphrase').checked) {
-        decryptedText = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+        key = CryptoJS.PBKDF2(password, '', { keySize: 256 / 32 });
+        iv = CryptoJS.PBKDF2(password, 'offlinesecrets_salt', { keySize: 128 / 32 });
+
       } else {
-        decryptedText = CryptoJS.AES.decrypt(ciphertext, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
+        key = CryptoJS.enc.Hex.parse(document.getElementById('key').value);
+        iv = CryptoJS.enc.Hex.parse(document.getElementById('iv').value);
       }
+      decryptedText = CryptoJS.AES.decrypt(ciphertext, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
     } catch (error) {
       console.error(error);
       document.getElementById('plaintext').value = 'Error during decryption';

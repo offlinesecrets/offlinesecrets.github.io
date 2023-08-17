@@ -163,11 +163,12 @@
     if (!secret || !password) {
       return;
     }
-    const encryptedToDetermineKeyIv = CryptoJS.AES.encrypt(secret, password);
+    const key = CryptoJS.PBKDF2(password, '', { keySize: 256 / 32 });
+    const iv = CryptoJS.PBKDF2(password, 'offlinesecrets_salt', { keySize: 128 / 32 });
+    const encrypted = CryptoJS.AES.encrypt(secret, key, {iv: iv});
     document.getElementById('printPassphrase').value = password;
-    document.getElementById('printKey').value = encryptedToDetermineKeyIv.key;
-    document.getElementById('printIV').value = encryptedToDetermineKeyIv.iv;
-    const encrypted = CryptoJS.AES.encrypt(secret, encryptedToDetermineKeyIv.key, {iv: encryptedToDetermineKeyIv.iv});
+    document.getElementById('printKey').value = key;
+    document.getElementById('printIV').value = iv;
     const secretEncrypted = encrypted.toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
     document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -v <iv>`;
