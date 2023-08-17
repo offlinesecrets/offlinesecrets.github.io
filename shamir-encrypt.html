@@ -223,7 +223,7 @@
     document.getElementById('shares').value = '';
   }
 
-  function validateSecret(e) {
+  function validateSecret() {
     const secret = document.getElementById('secret').value;
     const maxLength = (document.getElementById('createQr').checked) ? QR_MAX_LENGTH : NO_QR_MAX_LENGTH;
     document.getElementById('secret').setAttribute('maxlength', maxLength.toString());

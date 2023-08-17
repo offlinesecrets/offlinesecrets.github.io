@@ -61,7 +61,7 @@
           <label for="secret" class="sr-only">Secret</label>
         </div>
         <div class="col-10 mb-3">
-          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" onchange="encrypt()" rows="5"></textarea>
+          <textarea id="secret" class="form-control" type="text" placeholder="Please provide the secret to encrypt" maxlength="110" onchange="validateSecret();encrypt()" rows="5"></textarea>
         </div>
       </div>
 
@@ -79,7 +79,7 @@
           <label for="createQr" class="sr-only">Generate QR code</label>
         </div>
         <div class="col-lg-1 col-md-2 mb-3">
-          <input class="form-check-input" type="checkbox" value="" id="createQr" checked onchange="encrypt()">
+          <input class="form-check-input" type="checkbox" value="" id="createQr" checked onchange="validateSecret();encrypt()">
         </div>
       </div>
 
@@ -103,15 +103,15 @@
         <div class="printable">
           <div class="print-page">
             <div id="printCommentPage2" class="col-12 mt-1 mb-4"></div>
-            <div class="mb-4">
+            <div class="mb-2">
               <span>Password</span>
               <input id="printPassphrase" class="form-control artifact" readonly/>
             </div>
-            <div class="mb-4">
+            <div class="mb-2">
               <span>Key</span>
               <input id="printKey" class="form-control artifact" readonly/>
             </div>
-            <div class="mb-4">
+            <div class="mb-2">
               <span>Initialisation Vector</span>
               <input id="printIV" class="form-control artifact" readonly/>
             </div>
@@ -121,9 +121,13 @@
             <div class="mt-4">
               <div id="qrGenerated"></div>
             </div>
-            <div class="mt-4">
+            <div class="mt-2">
               <span>Encrypted secret</span>
-              <textarea id="secretEncrypted" class="form-control artifact" rows="6" readonly></textarea>
+              <textarea id="secretEncrypted" class="form-control artifact" rows="9" readonly></textarea>
+            </div>
+            <div class="mt-2">
+              <span>Command to decrypt</span>
+              <textarea id="secretCommand" class="form-control artifact" rows="1" readonly></textarea>
             </div>
           </div>
         </div>
@@ -136,6 +140,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
+  const QR_MAX_LENGTH = 110;
+  const NO_QR_MAX_LENGTH = 512;
+
+  function validateSecret(e) {
+    const secret = document.getElementById('secret').value;
+    const maxLength = (document.getElementById('createQr').checked) ? QR_MAX_LENGTH : NO_QR_MAX_LENGTH;
+    document.getElementById('secret').setAttribute('maxlength', maxLength.toString());
+    if (document.getElementById('createQr').checked && secret.length > maxLength) {
+      document.getElementById('secret').value = secret.slice(0, maxLength);
+    }
+  }
 
   function encrypt() {
     const comment = document.getElementById('comment').value;
@@ -148,26 +163,31 @@
     if (!secret || !password) {
       return;
     }
-    const encrypted = CryptoJS.AES.encrypt(secret, password);
+    const encryptedToDetermineKeyIv = CryptoJS.AES.encrypt(secret, password);
     document.getElementById('printPassphrase').value = password;
-    document.getElementById('printKey').value = encrypted.key;
-    document.getElementById('printIV').value = encrypted.iv;
+    document.getElementById('printKey').value = encryptedToDetermineKeyIv.key;
+    document.getElementById('printIV').value = encryptedToDetermineKeyIv.iv;
+    const encrypted = CryptoJS.AES.encrypt(secret, encryptedToDetermineKeyIv.key, {iv: encryptedToDetermineKeyIv.iv});
     const secretEncrypted = encrypted.toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
+    document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -v <iv>`;
 
     if (document.getElementById('createQr').checked) {
+      document.getElementById('secretEncrypted').setAttribute('rows', '3');
       try {
         new QRCode(document.getElementById("qrGenerated"), {
           text: secretEncrypted,
           width: 768,
           height: 768,
         });
-        document.getElementById('printButton').disabled = false;
       } catch (error) {
         console.error(error);
         alert('Error during encryption: text is too long');
       }
+    } else {
+      document.getElementById('secretEncrypted').setAttribute('rows', '10');
     }
+    document.getElementById('printButton').disabled = false;
   }
 </script>
 
