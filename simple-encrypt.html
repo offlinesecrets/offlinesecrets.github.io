@@ -171,7 +171,7 @@
     document.getElementById('printIV').value = iv;
     const secretEncrypted = encrypted.toString();
     document.getElementById('secretEncrypted').value = secretEncrypted;
-    document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -v <iv> -nosalt`;
+    document.getElementById('secretCommand').value = `echo <secret> | base64 -d | openssl enc -d -aes-256-cbc -K <key> -iv <iv> -nosalt`;
 
     if (document.getElementById('createQr').checked) {
       document.getElementById('secretEncrypted').setAttribute('rows', '5');
