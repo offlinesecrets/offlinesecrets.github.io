@@ -3,10 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none'; 
+    script-src 'none'; 
+    style-src 'none'; 
+    img-src 'none'; 
+    connect-src 'none'; 
+    font-src 'none'; 
+    object-src 'none'; 
+    media-src 'none'; 
+    frame-src 'none'; 
+    worker-src 'none'">
+
   <title>Decrypt secret using AES algorithm</title>
   <link rel="icon" type="image/x-icon" href="icon.svg">
 
   <link href="dependencies/bootstrap-5.3.2.min.css" rel="stylesheet">
+  <script src="dependencies/bootstrap-5.3.2.min.js"></script>
+  <script src="dependencies/popper-core-2.10.2.min.js"></script>
   <script src="dependencies/crypto-js-4.1.1.min.js"></script>
   <script src="dependencies/qrcode.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="dependencies/main.css"/>
